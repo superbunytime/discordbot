@@ -1,7 +1,7 @@
 import discord
 import os
 import random_fursona
-
+  
 intents = discord.Intents.all()
 client = discord.Client(intents = intents)
 @client.event
@@ -20,6 +20,10 @@ async def on_message(message):
     await message.channel.send("hi")
   if msg.startswith("?fursona"):
     await message.channel.send(random_fursona.fursona_generator())
+  
+  print(message.author.id)
+
+
 
 with open("token", "r+") as keyfile:
     key = keyfile.read()

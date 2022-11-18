@@ -41,4 +41,4 @@ def fursona_generator():
     return (f"you are a {size} {pcolor} {species} with {scolor} highlights. Your special ability is {ability}, and you are cursed with {weakness}.  Your favorite food is {food} and your party role is {role}")
 
 
-print(fursona_generator())
+# print(fursona_generator())
