@@ -1,6 +1,7 @@
 import discord
 import os
 import random_fursona
+import botlogic
   
 intents = discord.Intents.all()
 client = discord.Client(intents = intents)
@@ -22,6 +23,9 @@ async def on_message(message):
     await message.channel.send(random_fursona.fursona_generator())
   
   print(message.author.id)
+  if message.author.id == botlogic.cinnabun.id:
+    botlogic.cinnabun.msgCount +=1
+    print(botlogic.cinnabun.msgCount)
 
 
 
