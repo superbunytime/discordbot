@@ -31,8 +31,7 @@ def rand(list):
 
 def fursona_generator():
     species = rand(species_list)
-    pcolor, scolor, tcolor = rand(color_list), rand(
-        color_list), rand(color_list)
+    pcolor, scolor, tcolor = rand(color_list), rand(color_list), rand(color_list)
     size = rand(size_list)
     ability = rand(ability_list)
     weakness = rand(weakness_list)
