@@ -1,6 +1,7 @@
 import discord
 import os
 import random_fursona
+import tarot
 import botlogic
   
 intents = discord.Intents.all()
@@ -21,6 +22,8 @@ async def on_message(message):
     await message.channel.send("hi")
   if msg.startswith("?fursona"):
     await message.channel.send(random_fursona.fursona_generator())
+  if msg.startswith("?tarot"):
+    await message.channel.send(tarot.tarot_generator())
   
   print(message.author.id)
   if message.author.id == botlogic.cinnabun.id:
