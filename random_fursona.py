@@ -22,7 +22,7 @@ weakness_list = ["an aversion to blenders", "a fear of tea", "extreme clumsiness
 favorite_food = ["choconana", "pilk", "crayons", "pancakes", "your friends", "your enemies", "fuit gummy",
                  "chocolate covered espresso beans", "hotdog bong water", "nicotine gum", "corn husks", "paper", "spaghetti code", "war crime burger", "cake", "pound cake", "coffee cake", "donuts", "taco bell", "paint chips", "bepis", "estrogen", "wood", "testosterone", "cement", "dirt", "smart phones", "sushi", "whiny bottoms", "pocket lint", "guitar picks", "rare pokemon cards", "waffles", "souls", "mangos", "chocolate", "white chocolate", "chocolate bloom", "snozzberries", "weed", "rock candy", "edible clothing", "pastry creatures", "ice cubes", "focus crystal", "tiddy", "pennies", "lofi beats", "spirals", "algae", "polyfill", "the blood of your enemies"]
 role_list = ["healer", "tank", "mage", "bard", "dps", "support", "alchemist", "knight",
-             "deadbeat", "merchant", "diplomat", "rogue", "druid", "necromancer", "nekomancer", "geomancer", "seer", "hardass", "emergency food supply", "freeloader", "milk drinker", "imposter", "crewmate", "idol", "mime", "chef" "little pee pee boy", "beef editor", "biochemist"]
+             "deadbeat", "merchant", "diplomat", "rogue", "druid", "necromancer", "nekomancer", "geomancer", "seer", "hardass", "emergency food supply", "freeloader", "milk drinker", "imposter", "crewmate", "idol", "mime", "chef", "little pee pee boy", "beef editor", "biochemist"]
 
 
 def rand(list):
