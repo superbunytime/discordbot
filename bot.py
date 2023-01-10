@@ -5,6 +5,9 @@ import tarot
 import d20
 import chat_curses
 import botlogic
+import aiohttp
+import asyncio
+import sys
   
 intents = discord.Intents.all()
 client = discord.Client(intents = intents)
