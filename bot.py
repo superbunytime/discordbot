@@ -1,19 +1,18 @@
-import discord
-import os
-import random_fursona
-import tarot
-import d20
-import chat_curses
-import botlogic
-import aiohttp
-import asyncio
-import sys
+import discord, os, random_fursona, tarot, d20, chat_curses, botlogic, aiohttp, asyncio, sys, time
+
   
 intents = discord.Intents.all()
 client = discord.Client(intents = intents)
 @client.event
 async def on_ready():
   print("we have logged in as {0.user}".format(client))
+  # for member in client.get_all_members():
+  #   print(member.id)
+    # push the member id to a table using sqlalchemy
+    # the table should have member id, member name, and number of messages sent within 144 hours
+  print(botlogic.member_list(botlogic.set1))
+    
+
 
 @client.event
 async def on_message(message):
@@ -23,8 +22,6 @@ async def on_message(message):
   msg = message.content
   msgl = message.content.lower()
 
-  if msg.startswith("?hello"):
-    await message.channel.send("hi")
   if msg.startswith("/fursona"):
     await message.channel.send(random_fursona.fursona_generator())
   if msg.startswith("/tarot"):
