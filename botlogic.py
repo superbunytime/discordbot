@@ -1,4 +1,3 @@
-import bot
 """this is for the channel role management logic for sussy's self promo channel
    this current version will be for testing in my own bot test server until it works"""
 
@@ -20,11 +19,3 @@ class dUser:
       self.msgCount = msgCount
 
 cinnabun = dUser(257032548431953922, 0) #initialize message count with 0
-
-def member_list(set):
-    for member in bot.client.get_all_members():
-      set.add(member)
-
-set1 = set()
-# member_list(set1)
-# print(set1)

@@ -12,4 +12,4 @@ def curse_generator():
     dur = rand(duration_list)
     return (f"you have been cursed to {curse} for {dur} minutes!")
 
-print(curse_generator())
+# print(curse_generator())

@@ -6,13 +6,18 @@ client = discord.Client(intents = intents)
 @client.event
 async def on_ready():
   print("we have logged in as {0.user}".format(client))
-  # for member in client.get_all_members():
-  #   print(member.id)
-    # push the member id to a table using sqlalchemy
-    # the table should have member id, member name, and number of messages sent within 144 hours
-  print(botlogic.member_list(botlogic.set1))
-    
 
+dict1 = {}
+
+async def member_list(dict):
+    for member in client.get_all_members():
+      dict.update({member: member})
+
+async def come_forth():
+  print(member_list(dict1))
+  return await member_list(dict1)
+    # push the member id to a table using sqlalchemy
+    # the table should have member id, member name, and number of messages sent within 144 hours    
 
 @client.event
 async def on_message(message):
