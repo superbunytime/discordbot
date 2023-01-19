@@ -7,15 +7,13 @@ client = discord.Client(intents = intents)
 async def on_ready():
   print("we have logged in as {0.user}".format(client))
 
-dict1 = {}
+  mem_set = set()
+  for member in client.get_all_members():
+    mem_set.add(member)
+  
+  # print(mem_set) #that'll give you a lot of members with a lot of information
 
-async def member_list(dict):
-    for member in client.get_all_members():
-      dict.update({member: member})
 
-async def come_forth():
-  print(member_list(dict1))
-  return await member_list(dict1)
     # push the member id to a table using sqlalchemy
     # the table should have member id, member name, and number of messages sent within 144 hours    
 
