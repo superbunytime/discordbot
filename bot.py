@@ -1,8 +1,10 @@
 import discord, os, random_fursona, tarot, d20, chat_curses, botlogic, aiohttp, asyncio, sys, time
 
-  
+
 intents = discord.Intents.all()
 client = discord.Client(intents = intents)
+
+
 @client.event
 async def on_ready():
   print("we have logged in as {0.user}".format(client))
