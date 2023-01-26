@@ -1,5 +1,6 @@
-import discord, os, random_fursona, tarot, d20, chat_curses, botlogic, aiohttp, asyncio, sys, time
-
+import discord, aiohttp, asyncio, sys, time
+import text_coloring as tc
+import random_fursona, tarot, d20, chat_curses, botlogic
 
 intents = discord.Intents.all()
 client = discord.Client(intents = intents)
@@ -48,9 +49,16 @@ async def on_message(message):
     await message.channel.send("OOF")
     quit()
   
-  # print(message.author.id)
-  print(f'channel: {message.channel.name}')
-  print(f'user: {message.author.name}')
+  
+  member_col = message.author.color
+  #check for default uncolored users.
+  if member_col == discord.Colour.default():
+    #render them as white instead of black.
+    m_col = tc.W
+  else:
+    m_col = tc.new(member_col.r, member_col.g, member_col.b)
+  c_col = tc.new(255,82,197) if not message.channel.nsfw else tc.R
+  print(f'in {c_col}{message.channel.name}, {m_col}{message.author.name}{tc.W}:')
   print(message.content)
 
 with open("token", "r+") as keyfile:
