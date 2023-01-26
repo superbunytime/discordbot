@@ -41,6 +41,13 @@ async def on_message(message):
   if msg.startswith("/curse"):
     await message.channel.send(chat_curses.curse_generator())
   
+  #butte, puppy, bunny
+  admins = [145031705303056384, 257032548431953922, 217569769052700672]
+  
+  if msgl in ["kill bot", "stop bot", "bot die", "bot stfu", "]"] and message.author.id in admins:
+    await message.channel.send("OOF")
+    quit()
+  
   # print(message.author.id)
   print(f'channel: {message.channel.name}')
   print(f'user: {message.author.name}')
