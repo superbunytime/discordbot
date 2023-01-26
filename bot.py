@@ -4,25 +4,28 @@ import discord, os, random_fursona, tarot, d20, chat_curses, botlogic, aiohttp, 
 intents = discord.Intents.all()
 client = discord.Client(intents = intents)
 @client.event
-# async def on_ready():
-#   print("we have logged in as {0.user}".format(client))
+async def on_ready():
+  print("we have logged in as {0.user}".format(client))
 
-#   mem_set = set()
-#   counter = 0
-#   for member in client.get_all_members():
-#     mem_set.add(member.id)
+  mem_set = set()
+  counter = 0
+  for member in client.get_all_members():
+    mem_set.add(member.id)
     
-#   mem_dict = dict.fromkeys(mem_set, counter)
+  mem_dict = dict.fromkeys(mem_set, counter)
 
-#   print(mem_dict) #that'll give you a lot of members with a lot of information
+  print(mem_dict) #that'll give you a lot of members with a lot of information
 
 
     # push the member id to a table using sqlalchemy
     # the table should have member id, member name, and number of messages sent within 144 hours  
-    
+
+@client.event
 async def on_message(message):
-  if message.author == client.user:
-    return
+  # if message.author == client.user:
+  #   return
+    #if this is commented out, make sure nothing causes the bot to reply to itself
+    #as this would immediately cause an infinite loop and crash the program
 
   msg = message.content
   msgl = message.content.lower()
