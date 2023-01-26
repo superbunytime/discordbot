@@ -4,20 +4,22 @@ import discord, os, random_fursona, tarot, d20, chat_curses, botlogic, aiohttp, 
 intents = discord.Intents.all()
 client = discord.Client(intents = intents)
 @client.event
-async def on_ready():
-  print("we have logged in as {0.user}".format(client))
+# async def on_ready():
+#   print("we have logged in as {0.user}".format(client))
 
-  mem_set = set()
-  for member in client.get_all_members():
-    mem_set.add(member)
-  
-  # print(mem_set) #that'll give you a lot of members with a lot of information
+#   mem_set = set()
+#   counter = 0
+#   for member in client.get_all_members():
+#     mem_set.add(member.id)
+    
+#   mem_dict = dict.fromkeys(mem_set, counter)
+
+#   print(mem_dict) #that'll give you a lot of members with a lot of information
 
 
     # push the member id to a table using sqlalchemy
-    # the table should have member id, member name, and number of messages sent within 144 hours    
-
-@client.event
+    # the table should have member id, member name, and number of messages sent within 144 hours  
+    
 async def on_message(message):
   if message.author == client.user:
     return
@@ -34,12 +36,10 @@ async def on_message(message):
   if msg.startswith("/curse"):
     await message.channel.send(chat_curses.curse_generator())
   
-  print(message.author.id)
-  if message.author.id == botlogic.cinnabun.id:
-    botlogic.cinnabun.msgCount +=1
-    print(botlogic.cinnabun.msgCount)
-
-
+  # print(message.author.id)
+  print(f'channel: {message.channel.name}')
+  print(f'user: {message.author.name}')
+  print(message.content)
 
 with open("token", "r+") as keyfile:
     key = keyfile.read()

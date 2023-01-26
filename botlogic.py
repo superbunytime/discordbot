@@ -18,4 +18,3 @@ class dUser:
       self.id = id
       self.msgCount = msgCount
 
-cinnabun = dUser(257032548431953922, 0) #initialize message count with 0
