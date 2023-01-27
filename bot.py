@@ -59,7 +59,7 @@ async def on_message(message):
     m_col = tc.new(member_col.r, member_col.g, member_col.b)
   c_col = tc.new(255,82,197) if not message.channel.nsfw else tc.R
   print(f'in {c_col}{message.channel.name}, {m_col}{message.author.name}{tc.W}:')
-  print(message.content)
+  print(message.author.id)
 
 with open("token", "r+") as keyfile:
     key = keyfile.read()
