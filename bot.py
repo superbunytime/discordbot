@@ -10,14 +10,12 @@ client = discord.Client(intents = intents)
 async def on_ready():
   print("we have logged in as {0.user}".format(client))
 
-  mem_set = set()
   counter = 0
+  mem_list = list()
   for member in client.get_all_members():
-    mem_set.add(member.id)
-    
-  mem_dict = dict.fromkeys(mem_set, counter)
+    mem_list.append({"id": member.id, "name": member.name, "messages_sent": 0})
 
-  print(mem_dict) #that'll give you a lot of members with a lot of information
+  print(mem_list) #that'll give you a lot of members with a lot of information
 
 
     # push the member id to a table using sqlalchemy
@@ -59,7 +57,7 @@ async def on_message(message):
     m_col = tc.new(member_col.r, member_col.g, member_col.b)
   c_col = tc.new(255,82,197) if not message.channel.nsfw else tc.R
   print(f'in {c_col}{message.channel.name}, {m_col}{message.author.name}{tc.W}:')
-  print(message.author.id)
+  print(message.content)
 
 with open("token", "r+") as keyfile:
     key = keyfile.read()
