@@ -14,8 +14,10 @@ async def on_ready():
   mem_list = list()
   for member in client.get_all_members():
     mem_list.append({"id": member.id, "name": member.name, "messages_sent": 0})
+    
 
-  print(mem_list) #that'll give you a lot of members with a lot of information
+  # print(mem_list) #that'll give you a lot of members with a lot of information
+  #since you know that works, you don't need to print it every time now.
 
 
     # push the member id to a table using sqlalchemy
