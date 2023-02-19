@@ -60,6 +60,47 @@ async def on_message(message):
   c_col = tc.new(255,82,197) if not message.channel.nsfw else tc.R
   print(f'in {c_col}{message.channel.name}, {m_col}{message.author.name}{tc.W}:')
   print(message.content)
+  counter = 0
+  for channel in message.guild.text_channels:
+    async for msg in channel.history(limit = 10):
+      # you'll want to flatten that output into a list of dicts with timestamps
+      # and check the timestamp of the tenth message against the timestamp of the first message
+      if msg.author == message.author:
+        print(msg.content)
+        counter += 1
+  print(counter)
+  if counter >= 10:
+    print("congratulations, you're granted a priveleged role!")
+    # after this print statement, you can append priveleged role status to sql database
+    # via sqlalchemy
+    # then, every so often, check the sql database to change roles
+
+  # so that counts all the messages sent by a user in a channel. (maybe all users, let's check manually)
+  # so it reaches back 3 months into discord message history, which is more than enough for our purposes
+  # now you just need to check *all* channels for messages from the user, which means putting it in
+  # an inefficient for loop
+  # and if you can time-constraint it to a week, you won't have to use timedelta either
+
+# @client.event
+# async def history(ctx, member: discord.member):
+#   messages = []
+#   async for channel in ctx.guild.channels:
+#     for message in ctx.channel.history(limit=None):
+#       if message.author.id == member.id:
+#         messages += [message]
+
+# Or...
+
+# messages = [msg for msg in await ctx.channel.history(limit=100).flatten() if msg.author.id == memberID]
+  # for m in message.author.history(limit =10):
+  #   print(m)
+  # okay that just breaks it (attempt 2)
+  # in case you lose the link go here:
+  # https://stackoverflow.com/questions/65560383/how-to-get-all-messages-that-user-sent-in-server-discord-py
+  # do the long inefficient loop through every channel but set the limit to 10 and it should get them
+  # i think
+  # print(message.author.history(limit = 10))
+  # okay that doesn't send what i need it sends <async_generator object Messageable.history at 0x000002A4FCDEAF40>
 
 with open("token", "r+") as keyfile:
     key = keyfile.read()
