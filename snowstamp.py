@@ -3,20 +3,17 @@ import datetime
 DISCORD_EPOCH = 1420070400000
 
 def snowFlakeMilli(num):
+      """Insert snowflake here to convert to milliseconds; this destroys the snowflake :("""
       return round(num * 1000)
 
-def convertSnowflakeToDate(snowflake, epoch = DISCORD_EPOCH):
-	milliseconds = snowFlakeMilli((snowflake >> 22) + 1420070400000)
+def timeExtractor(snowflake, epoch = DISCORD_EPOCH):
+	"""get the bitshifted millisecond value; a long number that's not very human readable."""
+	milliseconds = snowFlakeMilli((snowflake >> 22) + epoch)
+	print(milliseconds)
 	return milliseconds
 
-
-def validateSnowflake(snowflake, epoch):
-
-	timestamp = convertSnowflakeToDate(snowflake, epoch)
-
+def createTimestamp(snowflake):
+	"""convert long number to actual timestamp! Yay!! the snowflake's destruction was not in vain."""
+	shaveMe = timeExtractor(snowflake)/1000000 #shaving off the right amount of digits
+	timestamp = datetime.datetime.fromtimestamp(shaveMe).ctime() #converting to timestamp
 	return timestamp
-
-def dummy(snowflake):
-	goodNumber = convertSnowflakeToDate(snowflake)/1000000
-	betterNumber = datetime.datetime.fromtimestamp(goodNumber).ctime()
-	return betterNumber

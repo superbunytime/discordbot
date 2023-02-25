@@ -61,9 +61,9 @@ async def on_message(message):
   c_col = tc.new(255,82,197) if not message.channel.nsfw else tc.R
   print(f'in {c_col}{message.channel.name}, {m_col}{message.author.name}{tc.W}:')
   print(message.content)
-  print (message.id, datetime.now())
-  print(message.created_at)
-  print(snowstamp.dummy(message.id))
+  # print (message.id, datetime.now())
+  # print(message.created_at) # 8 hours ahead
+  print(snowstamp.createTimestamp(message.id))
   counter = 0
   idList = []
   then = datetime.now() - timedelta(days = 7)
@@ -81,7 +81,7 @@ async def on_message(message):
           # now compare the unix timestamps of the last message to the first message
         counter += 1
   # print(counter)
-  print(idList)
+  # print(idList) # hiding this for now because tired of long list printing in terminal
   if counter >= 10:
     print("congratulations, you're granted a priveleged role!")
     # after this print statement, you can append priveleged role status to sql database
