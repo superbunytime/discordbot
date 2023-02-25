@@ -1,6 +1,6 @@
 import discord, aiohttp, asyncio, sys, time
 import text_coloring as tc
-import random_fursona, tarot, d20, chat_curses, botlogic
+import random_fursona, tarot, d20, chat_curses, snowstamp
 import datetime
 from datetime import datetime, timedelta
 intents = discord.Intents.all()
@@ -62,6 +62,8 @@ async def on_message(message):
   print(f'in {c_col}{message.channel.name}, {m_col}{message.author.name}{tc.W}:')
   print(message.content)
   print (message.id, datetime.now())
+  print(message.created_at)
+  print(snowstamp.dummy(message.id))
   counter = 0
   idList = []
   then = datetime.now() - timedelta(days = 7)
