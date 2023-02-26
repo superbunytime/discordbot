@@ -13,12 +13,21 @@ async def on_ready():
 
   counter = 0
   mem_list = list()
+  role = "gay gay homosexual gay"
   for member in client.get_all_members():
-    mem_list.append({"id": member.id, "name": member.name, "messages_sent": 0})
+    mem_list.append({"id": member.id, "name": member.name, "messages_sent": 0, "roles": member.roles, "join_date": member.joined_at})
+  for value in mem_list:
+    if role not in value["roles"]:
+      print(value["roles"])
+      # how to get the role name? if i can loop through each role, and test it for equality,
+      # i'll be getting somewhere. i'm struggling towards that end at the moment though.
+
     
 
   # print(mem_list) #that'll give you a lot of members with a lot of information
   #since you know that works, you don't need to print it every time now.
+  #just added member.roles to get all roles from members.
+
 
 
     # push the member id to a table using sqlalchemy
@@ -59,6 +68,7 @@ async def on_message(message):
   else:
     m_col = tc.new(member_col.r, member_col.g, member_col.b)
   c_col = tc.new(255,82,197) if not message.channel.nsfw else tc.R
+  print(message.author.name)
   print(f'in {c_col}{message.channel.name}, {m_col}{message.author.name}{tc.W}:')
   print(message.content)
   # print (message.id, datetime.now())
