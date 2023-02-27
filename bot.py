@@ -14,21 +14,19 @@ async def on_ready():
   counter = 0
   mem_list = list()
   role = "gay gay homosexual gay"
+  purge_list = list()
   for member in client.get_all_members():
     mem_list.append({"id": member.id, "name": member.name, "messages_sent": 0, "roles": member.roles, "join_date": member.joined_at})
   for value in mem_list:
-    if role not in value["roles"]:
-      print(value["roles"])
-      # how to get the role name? if i can loop through each role, and test it for equality,
-      # i'll be getting somewhere. i'm struggling towards that end at the moment though.
-
-    
+    if role in str(value["roles"]):
+      print(str(value["id"]))
+      # okay so that prints the role only when the user has the role.
+      # now we need to check if their join date is 7 days prior
+      # and if so, purge them.
+      # then loop the part of the on_ready function that checks that.
 
   # print(mem_list) #that'll give you a lot of members with a lot of information
   #since you know that works, you don't need to print it every time now.
-  #just added member.roles to get all roles from members.
-
-
 
     # push the member id to a table using sqlalchemy
     # the table should have member id, member name, and number of messages sent within 144 hours  
