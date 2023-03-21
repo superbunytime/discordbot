@@ -19,7 +19,7 @@ async def on_ready():
     mem_list.append({"id": member.id, "name": member.name, "messages_sent": 0, "roles": member.roles, "join_date": member.joined_at})
   for value in mem_list:
     if role in str(value["roles"]):
-      print(str(value["id"]))
+      print(str(value["name"]))
       # okay so that prints the role only when the user has the role.
       # now we need to check if their join date is 7 days prior
       # and if so, purge them.
@@ -69,8 +69,6 @@ async def on_message(message):
   print(message.author.name)
   print(f'in {c_col}{message.channel.name}, {m_col}{message.author.name}{tc.W}:')
   print(message.content)
-  # print (message.id, datetime.now())
-  # print(message.created_at) # 8 hours ahead
   print(snowstamp.createTimestamp(message.id))
   counter = 0
   idList = []
