@@ -39,6 +39,18 @@ async def on_message(message):
     await message.channel.send(tarot.tarot_generator())
   if msg.startswith("/d20"):
     await message.channel.send(d20.d20())
+  if msg.startswith("/d12"):
+    await message.channel.send(d20.d12())
+  if msg.startswith("/d10") and not msg.startswith("/d100"):
+    await message.channel.send(d20.d10())
+  if msg.startswith("/d8"):
+    await message.channel.send(d20.d8())
+  if msg.startswith("/d6"):
+    await message.channel.send(d20.d6())
+  if msg.startswith("/d4"):
+    await message.channel.send(d20.d4())
+  if msg.startswith("/d100"):
+    await message.channel.send(d20.d100())
   if msg.startswith("/curse"):
     await message.channel.send(chat_curses.curse_generator())
   

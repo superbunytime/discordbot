@@ -10,4 +10,25 @@ def d20():
   else:
     return num
 
-#print(d20())
+def d12():
+  num = (random.randrange(1,13))
+  return num
+
+def d10():
+  num = (random.randrange(1,11))
+  return num
+
+def d8():
+  num = (random.randrange(1,9))
+  return num
+
+def d6():
+  num = (random.randrange(1,7))
+  return num
+
+def d4():
+  num = (random.randrange(1,5))
+  return num
+def d100():
+  num = (random.randrange(1,101))
+  return num
