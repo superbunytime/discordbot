@@ -11,41 +11,34 @@ client = discord.Client(intents = intents)
 @client.event
 async def on_ready():
   print("we have logged in as {0.user}".format(client))
-  then = datetime.now() - timedelta(days = 7)
-  mem_list = list()
-  role = "gay gay homosexual gay" # name of the default role of all users that complete onboarding
-  purge_list = list()
-  for member in client.get_all_members():
-    mem_list.append({"id": member.id, "name": member.name, "messages_sent": 0, "roles": member.roles, "join_date": member.joined_at})
-  for value in mem_list:
-    if role in str(value["roles"]):
-      print(f'{str(value["name"])} has completed onboarding')
-
-  # print(mem_list) #that'll give you a lot of members with a lot of information
-  for value in mem_list:
-      if role not in (str(value["roles"])) and member.joined_at.timestamp() < then.timestamp():
-        purge_list.append(value)
-        print(f'{str(value["name"])} has not completed onboarding after one week')
-  print(purge_list)
-    # push the member id to a table using sqlalchemy
-    # the table should have member id, member name, and number of messages sent within 144 hours  
-
-  def checkTime():
-  # This function runs periodically every 1 second
-    threading.Timer(1, checkTime).start()
-
+  def scheduledEvent():
+    threading.Timer(1, scheduledEvent).start()
     now = datetime.now()
-
     current_time = now.strftime("%H:%M:%S")
     # print("Current Time =", current_time)
-    # comment that out to not pollute the console
+    # comment that out to not pollute the console; otherwise will fire every one second
+    if(current_time == '23:18:00'):  # check if matches with the desired time
+      then = datetime.now() - timedelta(days = 7)
+      mem_list = list()
+      role = "gay gay homosexual gay" # name of the default role of all users that complete onboarding
+      purge_list = list()
+      for member in client.get_all_members():
+        mem_list.append({"id": member.id, "name": member.name, "messages_sent": 0, "roles": member.roles, "join_date": member.joined_at})
+      for value in mem_list:
+        if role in str(value["roles"]):
+          print(f'{str(value["name"])} has completed onboarding')
+      for value in mem_list:
+          if role not in (str(value["roles"])) and member.joined_at.timestamp() < then.timestamp():
+            purge_list.append(value)
+            print(f'{str(value["name"])} has not completed onboarding after one week')
+            # for member in purge_list:
+              # can't get this line of code to kick a member right
+              # member.kick(member, reason = "never onboarded")
+              # print(f'{member["id"]} kicked')
 
-    if(current_time == '23:39:30'):  # check if matches with the desired time
-        print('sending message')
-        # make a function and have it called here
 
 
-  checkTime()
+  scheduledEvent()
 
 @client.event
 async def on_message(message):
