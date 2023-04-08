@@ -7,38 +7,39 @@ import threading
 intents = discord.Intents.all()
 client = discord.Client(intents = intents)
 
+async def scheduledEvent():
+  threading.Timer(1, scheduledEvent).start()
+  now = datetime.now()
+  current_time = now.strftime("%H:%M:%S")
+  # print("Current Time =", current_time)
+  # comment that out to not pollute the console; otherwise will fire every one second
+  if(current_time == '21:06:30'):  # check if matches with the desired time
+    then = datetime.now() - timedelta(days = 7)
+    mem_list = list()
+    role = "gay gay homosexual gay" # name of the default role of all users that complete onboarding
+    purge_list = list()
+    for member in client.get_all_members():
+      mem_list.append({"id": member.id, "name": member.name, "messages_sent": 0, "roles": member.roles, "join_date": member.joined_at})
+    for value in mem_list:
+      if role in str(value["roles"]):
+        print(f'{str(value["name"])} has completed onboarding')
+    for value in mem_list:
+        if role not in (str(value["roles"])) and member.joined_at.timestamp() < then.timestamp():
+          purge_list.append(value)
+          print(f'{str(value["id"])} {str(value["name"])} has not completed onboarding after one week')
+          for member in purge_list:
+            # can't get this line of code to kick a member right
+            # print(f'{member["id"]} kicked')
+            x = client.fetch_user(member["id"])
+            client.kick(x, reason = "never onboarded")
+
+
 
 @client.event
 async def on_ready():
   print("we have logged in as {0.user}".format(client))
-  def scheduledEvent():
-    threading.Timer(1, scheduledEvent).start()
-    now = datetime.now()
-    current_time = now.strftime("%H:%M:%S")
-    # print("Current Time =", current_time)
-    # comment that out to not pollute the console; otherwise will fire every one second
-    if(current_time == '23:18:00'):  # check if matches with the desired time
-      then = datetime.now() - timedelta(days = 7)
-      mem_list = list()
-      role = "gay gay homosexual gay" # name of the default role of all users that complete onboarding
-      purge_list = list()
-      for member in client.get_all_members():
-        mem_list.append({"id": member.id, "name": member.name, "messages_sent": 0, "roles": member.roles, "join_date": member.joined_at})
-      for value in mem_list:
-        if role in str(value["roles"]):
-          print(f'{str(value["name"])} has completed onboarding')
-      for value in mem_list:
-          if role not in (str(value["roles"])) and member.joined_at.timestamp() < then.timestamp():
-            purge_list.append(value)
-            print(f'{str(value["name"])} has not completed onboarding after one week')
-            # for member in purge_list:
-              # can't get this line of code to kick a member right
-              # member.kick(member, reason = "never onboarded")
-              # print(f'{member["id"]} kicked')
+  await scheduledEvent()
 
-
-
-  scheduledEvent()
 
 @client.event
 async def on_message(message):
