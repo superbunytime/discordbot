@@ -1,6 +1,5 @@
 import random
 
-
 def d(n):
   num = (random.randrange(1, n + 1))
   if n == 20:

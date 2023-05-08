@@ -2,7 +2,7 @@ import discord, aiohttp, asyncio, sys, time
 from discord.ext import commands
 from discord.ext import tasks
 import text_coloring as tc
-import random_fursona, tarot, d20, chat_curses, snowstamp
+import random_fursona, tarot, d20, chat_curses, snowstamp, purge_list, models
 import datetime
 from datetime import datetime, timedelta
 import threading
@@ -131,3 +131,5 @@ async def on_message(message):
 with open("token", "r+") as keyfile:
     key = keyfile.read()
     client.run(key)
+
+models.connect_db(app)
