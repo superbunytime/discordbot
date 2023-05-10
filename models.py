@@ -8,6 +8,7 @@ db = sqlalchemy()
 engine = db.create_engine()
 
 class USER(db.model):
+    __tablename__ = 'users'
     id = db.Column(db.BigInteger, primary_key = True)
     name = db.Column(db.String, nullable = False)
     active_user = db.Column(db.Boolean, nullable = False)

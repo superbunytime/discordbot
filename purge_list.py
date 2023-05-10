@@ -1,5 +1,5 @@
 def purge():
-    print("lol")
+    print("does nothing yet")
 
 
 # alright so what i'm doing is running some timed function in bot.py to add items to the purge list that i'll define here, then run another timed function two minutes after that last timed function to print out the purge list, which by then, should be populated.

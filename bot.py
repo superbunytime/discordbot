@@ -15,34 +15,34 @@ client = discord.Client(intents = intents)
 async def on_ready():
   print("we have logged in as {0.user}".format(client))
 
-# async def scheduledEvent():
-#   threading.Timer(1, scheduledEvent).start()
-#   now = datetime.now()
-#   current_time = now.strftime("%H:%M:%S")
-#   # print("Current Time =", current_time)
-#   # comment that out to not pollute the console; otherwise will fire every one second
-#   if(current_time == '12:00:00'):  # check if matches with the desired time
-#     then = datetime.now() - timedelta(days = 7)
-#     mem_list = list()
-#     role = "gay gay homosexual gay" # name of the default role of all users that complete onboarding
-#     purge_list = list()
-#     for member in client.get_all_members():
-#       mem_list.append({"id": member.id, "name": member.name, "messages_sent": 0, "roles": member.roles, "join_date": member.joined_at})
-#     for value in mem_list:
-#       if role in str(value["roles"]):
-#         print(f'{str(value["name"])} has completed onboarding')
-#     for value in mem_list:
-#         if role not in (str(value["roles"])) and member.joined_at.timestamp() < then.timestamp():
-#           purge_list.append(value)
-#           print(f'{str(value["id"])} {str(value["name"])} has not completed onboarding after one week')
-#           for member in purge_list:
-#             # can't get this line of code to kick a member right
-#             print(f'{member["id"]} kicked')
-#             x = client.fetch_user(member["id"])
-#             client.kick(x, reason = "never onboarded")
+async def scheduledEvent():
+  threading.Timer(1, scheduledEvent).start()
+  now = datetime.now()
+  current_time = now.strftime("%H:%M:%S")
+  # print("Current Time =", current_time)
+  # comment that out to not pollute the console; otherwise will fire every one second
+  if(current_time == '12:00:00'):  # check if matches with the desired time
+    then = datetime.now() - timedelta(days = 7)
+    mem_list = list()
+    role = "onboarding complete" # name of the default role of all users that complete onboarding
+    purge_list = list()
+    for member in client.get_all_members():
+      mem_list.append({"id": member.id, "name": member.name, "messages_sent": 0, "roles": member.roles, "join_date": member.joined_at})
+    for value in mem_list:
+      if role in str(value["roles"]):
+        print(f'{str(value["name"])} has completed onboarding')
+    for value in mem_list:
+        if role not in (str(value["roles"])) and member.joined_at.timestamp() < then.timestamp():
+          purge_list.append(value)
+          print(f'{str(value["id"])} {str(value["name"])} has not completed onboarding after one week')
+          for member in purge_list:
+            # can't get this line of code to kick a member right
+            print(f'{member["id"]} kicked')
+            x = client.fetch_user(member["id"])
+            client.kick(x, reason = "never onboarded")
 
 
-#   await scheduledEvent()
+  await scheduledEvent()
 
 async def setup_hook(self) -> None:
     self.alarm_message.start()
@@ -50,7 +50,7 @@ async def setup_hook(self) -> None:
 @tasks.loop(minutes = 1)
 async def alarm_message():
     await client.wait_until_ready()
-    channel = client.get_channel(1043014753875939389)
+    channel = client.get_channel(1043014753875939389) # it's been a while since i messed with this; should have commented it back then but i believe this is for the specific discord server (my bot test server)
     message = 'test'
     # await channel.send(message)
     await print(message)
@@ -75,13 +75,12 @@ async def on_message(message):
     await message.channel.send(tarot.tarot_generator())
   if msg.startswith("/d") and type(int(msg[2:])) == int:
     x = d20.d(int(msg[2:]))
-    await message.channel.send(x) # should let any number be passed as argument
+    await message.channel.send(x) # allows any number be passed as argument
   if msg.startswith("/curse"):
     await message.channel.send(chat_curses.curse_generator())
     
   
-  #butte, puppy, bunny
-  admins = [145031705303056384, 257032548431953922, 217569769052700672]
+  admins = [145031705303056384, 257032548431953922, 217569769052700672] # make sure only admin ids go here
   
   if msgl in ["kill bot", "stop bot", "bot die", "bot stfu", "]"] and message.author.id in admins:
     await message.channel.send("OOF")
@@ -132,4 +131,4 @@ with open("token", "r+") as keyfile:
     key = keyfile.read()
     client.run(key)
 
-models.connect_db(app)
+# models.connect_db(app)
