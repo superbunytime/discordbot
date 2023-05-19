@@ -21,8 +21,9 @@ async def scheduledEvent():
   current_time = now.strftime("%H:%M:%S")
   # print("Current Time =", current_time)
   # comment that out to not pollute the console; otherwise will fire every one second
-  if(current_time == '12:00:00'):  # check if matches with the desired time
+  if(current_time == '09:41:00'):  # check if matches with the desired time
     then = datetime.now() - timedelta(days = 7)
+    print(f"it is now {current_time}") # this code block is no longer running. may want to touch back later.
     mem_list = list()
     role = "onboarding complete" # name of the default role of all users that complete onboarding
     purge_list = list()
@@ -41,6 +42,13 @@ async def scheduledEvent():
             x = client.fetch_user(member["id"])
             client.kick(x, reason = "never onboarded")
 
+            # wait what is all this?? this looks like the kick functionality but it doesn't work yet.
+            # i need to send the purge_list stuff to the actual purge list via sqlalchemy queries.
+            # so let's get the kick functionality to work, then worry about sending it to the db
+            # make a function only callable by administrators to get a list of kickable users,
+            # just to be on the safe side, so that a mod can review it for testing/safety/not kicking everyone at once.
+            # so i can't seem to take scheduled event and put it in another file because of a runtime warning but also it's not currently doing anything.
+
 
   await scheduledEvent()
 
@@ -48,6 +56,7 @@ async def setup_hook(self) -> None:
     self.alarm_message.start()
 
 @tasks.loop(minutes = 1)
+
 async def alarm_message():
     await client.wait_until_ready()
     channel = client.get_channel(1043014753875939389) # it's been a while since i messed with this; should have commented it back then but i believe this is for the specific discord server (my bot test server)
@@ -100,6 +109,9 @@ async def on_message(message):
   print(f'in {c_col}{message.channel.name}, {m_col}{message.author.name}{tc.W}:')
   print(message.content)
   print(snowstamp.createTimestamp(message.id))
+
+  # this should be in its own function; it's to check user activity levels.
+
   counter = 0
   idList = []
   then = datetime.now() - timedelta(days = 7)
@@ -120,7 +132,7 @@ async def on_message(message):
   # print(idList) # hiding this for now because tired of long list printing in terminal
   if counter >= 10:
     # print("congratulations, you're granted a priveleged role!")
-    role = msg.guild.get_role(1079214033036660797) #need to get the specific role for specific server
+    role = msg.guild.get_role(1079214033036660797) #need to get the specific role for specific server; this role is outdated
     #okay this works, now you need to have a time function to remove the role if less than 10 messages.
     await msg.author.add_roles(role, reason=None, atomic=True)
     # after this print statement, you can append priveleged role status to sql database
