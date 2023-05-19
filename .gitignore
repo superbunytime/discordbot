@@ -3,4 +3,5 @@ discord-2.0.0.dist-info/
 discord.py-2.0.1.dist-info/
 __pycache__/
 botideas.txt
+db.py
 token
