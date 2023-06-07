@@ -29,9 +29,12 @@ async def scheduledEvent():
     purge_list = list()
     for member in client.get_all_members():
       mem_list.append({"id": member.id, "name": member.name, "messages_sent": 0, "roles": member.roles, "join_date": member.joined_at})
+      # add these to the discord user list if they're not already there
+      # subtract any users from the db whose ids are not present in the list; they've left the server
     for value in mem_list:
       if role in str(value["roles"]):
         print(f'{str(value["name"])} has completed onboarding')
+        # set onboarding_complete in db to true
     for value in mem_list:
         if role not in (str(value["roles"])) and member.joined_at.timestamp() < then.timestamp():
           purge_list.append(value)
@@ -41,6 +44,8 @@ async def scheduledEvent():
             print(f'{member["id"]} kicked')
             x = client.fetch_user(member["id"])
             client.kick(x, reason = "never onboarded")
+            # add them to the new table 'has been kicked previously' in the db
+            # may expand upon this in the future
 
             # wait what is all this?? this looks like the kick functionality but it doesn't work yet.
             # i need to send the purge_list stuff to the actual purge list via sqlalchemy queries.
