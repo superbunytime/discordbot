@@ -1,0 +1,1 @@
+This bot uses the discordpy API: documentation can be found at https://discordpy.readthedocs.io/en/stable/
