@@ -1,8 +1,30 @@
-from sqlalchemy import select
+from sqlalchemy import select, text, insert
 from sqlalchemy.orm import Session
 import db, models
 
 print(db.engine)
+
+
+
+#for member in mem_list:
+  # insert("users").values(id = member.id, name = member.name, has_roles = len(member.roles) == 2, join_date = member.joined_at.strftime("%c"))
+
+# should loop through and add all members to the member list database
+
+#for member in mem_list:
+  # now = datetime.now()
+  # then = now - timedelta(days = 7)
+  # if member.joined_at.strftime("%c") > then
+    #insert("has_not_onboarded").values(id = member.id, name = member.name, has_roles = len(member.roles) == 2, join_date = member.joined_at.strftime("%c"))
+
+# should grab all the users who haven't completed onboarding after one week
+
+# kickable = has_not_onboarded.query.all()
+#for kickee in kickable:
+  # await kickee.kick(reason = "has not onboarded within timeframe")
+
+# should kick all members from has_not_onboarded table
+
 
 
 

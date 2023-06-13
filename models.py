@@ -1,5 +1,5 @@
 import sqlalchemy
-from sqlalchemy import BigInteger, Column, Integer, create_engine, String, Integer, text, database_exists, create_database
+from sqlalchemy import BigInteger, Column, Integer, create_engine, String, Integer, text
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import DeclarativeBase, sessionmaker, Mapped, mapped_column
 
@@ -28,15 +28,19 @@ if __name__ == "__main__":
     except Exception as ex:
         print("Connection could not be made due to the following error: \n", ex)
 
-
 class Base(DeclarativeBase):
     pass
-
 
 class USER(Base):
     __tablename__ = "users"
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column(String(50))
-    active_user: Mapped[str] = mapped_column(String(5))
+    has_roles: Mapped[str] = mapped_column(String(5))
+    join_date: Mapped[int] = mapped_column(Integer)
+
+class HAS_NOT_ONBOARDED(Base):
+    __tablename__ = "has_not_onboarded"
+    id: Mapped[int] = mapped_column(primary_key=True)
+    name: Mapped[str] = mapped_column(String(50))
     has_roles: Mapped[str] = mapped_column(String(5))
     join_date: Mapped[int] = mapped_column(Integer)
