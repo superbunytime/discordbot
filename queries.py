@@ -5,9 +5,14 @@ import db, models
 print(db.engine)
 
 
-
-#for member in mem_list:
-  # insert("users").values(id = member.id, name = member.name, has_roles = len(member.roles) == 2, join_date = member.joined_at.strftime("%c"))
+def temp_name(list):
+  engine = models.get_connection()
+  con = engine.connect()
+  for member in list:
+    print(f'this is line 10: {member}')
+    # insert(models.USER).values(id = member.id, name = member.name, has_roles = len(member.roles) == 2, join_date = member.joined_at.strftime("%c"))
+    sql = insert(models.USER).values(**member)
+    con.execute(sql)
 
 # should loop through and add all members to the member list database
 

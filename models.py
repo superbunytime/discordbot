@@ -1,5 +1,5 @@
 import sqlalchemy
-from sqlalchemy import BigInteger, Column, Integer, create_engine, String, Integer, text
+from sqlalchemy import BigInteger, Column, Integer, create_engine, String, Integer, text, DateTime
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import DeclarativeBase, sessionmaker, Mapped, mapped_column
 
@@ -9,7 +9,7 @@ user = "postgres"
 password = "12345"
 host = "127.0.0.1"
 port = 5432
-database = "postgres"
+database = "discordtestdb"
 
 
 def get_connection():
@@ -20,27 +20,31 @@ def get_connection():
     )
 
 
-if __name__ == "__main__":
-    try:
-        # GET THE CONNECTION OBJECT (ENGINE) FOR THE DATABASE
-        engine = get_connection()
-        print(f"Connection to the {host} for user {user} created successfully.")
-    except Exception as ex:
-        print("Connection could not be made due to the following error: \n", ex)
+
+
 
 class Base(DeclarativeBase):
     pass
 
 class USER(Base):
     __tablename__ = "users"
-    id: Mapped[int] = mapped_column(primary_key=True)
+    id: Mapped[str] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column(String(50))
     has_roles: Mapped[str] = mapped_column(String(5))
-    join_date: Mapped[int] = mapped_column(Integer)
+    join_date: Mapped[int] = mapped_column(DateTime)
 
 class HAS_NOT_ONBOARDED(Base):
     __tablename__ = "has_not_onboarded"
-    id: Mapped[int] = mapped_column(primary_key=True)
+    id: Mapped[str] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column(String(50))
     has_roles: Mapped[str] = mapped_column(String(5))
-    join_date: Mapped[int] = mapped_column(Integer)
+    join_date: Mapped[int] = mapped_column(DateTime)
+
+if __name__ == "__main__":
+    try:
+        # GET THE CONNECTION OBJECT (ENGINE) FOR THE DATABASE
+        engine = get_connection()
+        Base.metadata.create_all(engine)
+        print(f"Connection to the {host} for user {user} created successfully.")
+    except Exception as ex:
+        print("Connection could not be made due to the following error: \n", ex)

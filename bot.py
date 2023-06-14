@@ -9,6 +9,7 @@ import sqlalchemy
 from sqlalchemy import BigInteger, Column, Integer, create_engine, String, Integer, insert
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import DeclarativeBase, sessionmaker, Mapped, mapped_column
+import queries
 intents = discord.Intents.all()
 client = discord.Client(intents = intents)
 
@@ -30,8 +31,9 @@ async def on_ready():
 async def mem_builder():
   mem_list = list()
   for member in client.get_all_members():
-    mem_list.append({"id": member.id, "name": member.name, "has roles": len(member.roles) == 2, "join_date": member.joined_at.strftime("%c")})
+    mem_list.append({"id": member.id, "name": member.name, "has_roles": len(member.roles) == 2, "join_date": member.joined_at.strftime("%c")})
   print(mem_list)
+  queries.temp_name(mem_list)
 
 # async def scheduledEvent():
 #   threading.Timer(1, scheduledEvent).start()
