@@ -8,11 +8,21 @@ print(db.engine)
 def temp_name(list):
   engine = models.get_connection()
   con = engine.connect()
-  for member in list:
-    print(f'this is line 10: {member}')
-    # insert(models.USER).values(id = member.id, name = member.name, has_roles = len(member.roles) == 2, join_date = member.joined_at.strftime("%c"))
-    sql = insert(models.USER).values(**member)
-    con.execute(sql)
+  with Session(engine) as session:
+    for member in list:
+      print(f'this is line 10: {member}')
+      # insert(models.USER).values(id = member.id, name = member.name, has_roles = len(member.roles) == 2, join_date = member.joined_at.strftime("%c"))
+      sql = insert(models.USER).values(member)
+      con.execute(sql)
+      print(sql)
+      
+def test_add():
+  engine = models.get_connection()
+  con = engine.connect()
+  user = {1, "idiot", False, 'Thu Feb 16 21:30:48 2023'}
+  with Session(engine) as session:
+    session.add(user)
+    session.commit()
 
 # should loop through and add all members to the member list database
 
