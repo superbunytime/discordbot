@@ -6,10 +6,10 @@ import datetime
 from datetime import datetime, timedelta
 import threading
 import sqlalchemy
-from sqlalchemy import BigInteger, Column, Integer, create_engine, String, Integer, insert
+from sqlalchemy import BigInteger, Column, Integer, create_engine, String, Integer, insert, select
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import DeclarativeBase, sessionmaker, Mapped, mapped_column
-import queries
+import queries, models
 intents = discord.Intents.all()
 client = discord.Client(intents = intents)
 
@@ -30,10 +30,18 @@ async def on_ready():
 @tasks.loop(seconds=10.0)
 async def mem_builder():
   mem_list = list()
+  members = []
   for member in client.get_all_members():
-    mem_list.append({"id": member.id, "name": member.name, "has_roles": len(member.roles) == 2, "join_date": member.joined_at.strftime("%c")})
-  print(mem_list)
-  queries.temp_name(mem_list)
+    members.append({"id": member.id,
+                    "name": member.name,
+                    "roles": len(member.roles) == 2,
+                    "joined_at": member.joined_at})
+  for member in members:
+    new_user = models.USER(id = member['id'], name = member['name'], has_roles = member['roles'], join_date = member['joined_at'].strftime("%c"))
+    mem_list.append(new_user)
+
+  # queries.add_to_db(mem_list)
+
 
 # async def scheduledEvent():
 #   threading.Timer(1, scheduledEvent).start()

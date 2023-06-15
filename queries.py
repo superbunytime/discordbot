@@ -2,7 +2,7 @@ from sqlalchemy import select, text, insert
 from sqlalchemy.orm import Session
 import models
 
-def temp_name(list):
+def add_to_db(list):
     engine = models.get_connection()
     with Session(engine) as session:
       for member in list:

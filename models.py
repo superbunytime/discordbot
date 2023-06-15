@@ -24,14 +24,14 @@ class Base(DeclarativeBase):
 
 class USER(Base):
     __tablename__ = "users"
-    id: Mapped[int] = mapped_column(primary_key=True)
+    id: Mapped[str] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column(String(50))
     has_roles: Mapped[str] = mapped_column(String(5))
     join_date: Mapped[str] = mapped_column(DateTime)
 
 class HAS_NOT_ONBOARDED(Base):
     __tablename__ = "has_not_onboarded"
-    id: Mapped[int] = mapped_column(primary_key=True)
+    id: Mapped[str] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column(String(50))
     has_roles: Mapped[str] = mapped_column(String(5))
     join_date: Mapped[str] = mapped_column(DateTime)
