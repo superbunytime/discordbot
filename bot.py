@@ -6,7 +6,7 @@ import datetime
 from datetime import datetime, timedelta
 import threading
 import sqlalchemy
-from sqlalchemy import BigInteger, Column, Integer, create_engine, String, Integer, insert, select
+from sqlalchemy import BigInteger, Column, Integer, create_engine, String, Integer, insert, select, update
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import DeclarativeBase, sessionmaker, Mapped, mapped_column
 import queries, models
@@ -20,10 +20,7 @@ client = discord.Client(intents = intents)
 @client.event
 async def on_ready():
   print("we have logged in as {0.user}".format(client))
-  # client.loop.create_task(mem_builder())
-  # it only does it once!!
   mem_builder.start()
-  # it loops!!!
 
   
 
@@ -40,7 +37,8 @@ async def mem_builder():
     new_user = models.USER(id = member['id'], name = member['name'], has_roles = member['roles'], join_date = member['joined_at'].strftime("%c"))
     mem_list.append(new_user)
 
-  # queries.add_to_db(mem_list)
+  queries.add_to_db(mem_list)
+  # looking at upsert stuff, wouldn't it be easier for now to just drop the table and rebuild it completely?  it may be computationally heavy, but we can always worry about upsert stuff when we're doing polish.
 
 
 # async def scheduledEvent():

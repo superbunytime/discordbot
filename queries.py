@@ -1,23 +1,21 @@
-from sqlalchemy import select, text, insert
-from sqlalchemy.orm import Session
+from sqlalchemy import select, text, insert, update, delete
+from sqlalchemy.orm import Session, query
 import models
 
 def add_to_db(list):
     engine = models.get_connection()
     with Session(engine) as session:
+      if models.USER:
+         models.USER.__table__.drop(engine)
+      models.Base.metadata.create_all(engine)
+      session.commit()
       for member in list:
         session.add(member)
-      session.commit()
-       
-def test_add():
-  engine = models.get_connection()
-  con = engine.connect()
-  user = {1, "idiot", False, 'Thu Feb 16 21:30:48 2023'}
-  with Session(engine) as session:
-    session.add(user)
-    session.commit()
+        session.commit()
 
-# should loop through and add all members to the member list database
+# holy fluff it actually works without crashing
+# so this rebuilds the database every ten seconds. naturally I'll want to do it less frequently than this.
+
 
 #for member in mem_list:
   # now = datetime.now()
