@@ -19,26 +19,22 @@ def get_connection():
         )
     )
 
-
-
-
-
 class Base(DeclarativeBase):
     pass
 
 class USER(Base):
     __tablename__ = "users"
-    id: Mapped[str] = mapped_column(primary_key=True)
+    id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column(String(50))
     has_roles: Mapped[str] = mapped_column(String(5))
-    join_date: Mapped[int] = mapped_column(DateTime)
+    join_date: Mapped[str] = mapped_column(DateTime)
 
 class HAS_NOT_ONBOARDED(Base):
     __tablename__ = "has_not_onboarded"
-    id: Mapped[str] = mapped_column(primary_key=True)
+    id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column(String(50))
     has_roles: Mapped[str] = mapped_column(String(5))
-    join_date: Mapped[int] = mapped_column(DateTime)
+    join_date: Mapped[str] = mapped_column(DateTime)
 
 if __name__ == "__main__":
     try:

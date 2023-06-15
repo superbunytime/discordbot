@@ -1,21 +1,14 @@
 from sqlalchemy import select, text, insert
 from sqlalchemy.orm import Session
-import db, models
-
-print(db.engine)
-
+import models
 
 def temp_name(list):
-  engine = models.get_connection()
-  con = engine.connect()
-  with Session(engine) as session:
-    for member in list:
-      print(f'this is line 10: {member}')
-      # insert(models.USER).values(id = member.id, name = member.name, has_roles = len(member.roles) == 2, join_date = member.joined_at.strftime("%c"))
-      sql = insert(models.USER).values(member)
-      con.execute(sql)
-      print(sql)
-      
+    engine = models.get_connection()
+    with Session(engine) as session:
+      for member in list:
+        session.add(member)
+      session.commit()
+       
 def test_add():
   engine = models.get_connection()
   con = engine.connect()
