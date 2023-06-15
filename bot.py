@@ -28,7 +28,12 @@ async def on_ready():
 async def mem_builder():
   mem_list = list()
   members = []
+  then = datetime.now() - timedelta(days = 7)
   for member in client.get_all_members():
+    # print(len(member.roles) > 2)
+    print(len(member.roles) > 2 and member.joined_at.timestamp() < then.timestamp())
+    # for later, you can add to has_not_onboarded table with that qualifier
+
     members.append({"id": member.id,
                     "name": member.name,
                     "roles": len(member.roles) == 2,
