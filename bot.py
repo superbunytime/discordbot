@@ -13,30 +13,39 @@ import queries, models
 intents = discord.Intents.all()
 client = discord.Client(intents = intents)
 
-
-
-
-
 @client.event
 async def on_ready():
   print("we have logged in as {0.user}".format(client))
   mem_builder.start()
 
-  
-
 @tasks.loop(seconds=10.0)
 async def mem_builder():
   mem_list = list()
   members = []
+  kickable = []
   then = datetime.now() - timedelta(days = 7)
   for member in client.get_all_members():
-    # print(len(member.roles) > 2)
-    print(len(member.roles) > 2 and member.joined_at.timestamp() < then.timestamp())
-    # for later, you can add to has_not_onboarded table with that qualifier
-
+    if len(member.roles) < 2 and member.joined_at.timestamp() > then.timestamp():
+      await member.kick(reason="never onboarded")
+      kickable.append({"id": member.id,
+                    "name": member.name,
+                    "roles": len(member.roles) < 2,
+                    "joined_at": member.joined_at})
+      # for polish, add these to the has_not_onboarded table
+      # for now, just make sure they meet all the requirements to be kicked,
+      # and kick them.
+  print(kickable)
+  for member in kickable:
+    print(member["id"])
+    # okay that gets the id, now kick them.
+    # oops none of that was working so i just kicked them up on line 29 and that worked.
+    
+  for member in client.get_all_members():
+    # for some reason it was giving me an error until i restarted the same for loop
+    # I'm sure it's something simple, but for now I'm just going to redeclare it.
     members.append({"id": member.id,
                     "name": member.name,
-                    "roles": len(member.roles) == 2,
+                    "roles": len(member.roles) >= 2,
                     "joined_at": member.joined_at})
   for member in members:
     new_user = models.USER(id = member['id'], name = member['name'], has_roles = member['roles'], join_date = member['joined_at'].strftime("%c"))
