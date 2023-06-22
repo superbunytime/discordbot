@@ -7,3 +7,4 @@ db.py
 token
 spaghetti.py
 0001-persist-records-to-db.patch
+random_fursona.py

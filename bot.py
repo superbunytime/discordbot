@@ -34,7 +34,7 @@ async def mem_builder():
       # for polish, add these to the has_not_onboarded table
       # for now, just make sure they meet all the requirements to be kicked,
       # and kick them.
-  print(kickable)
+  # print(kickable)
   for member in kickable:
     print(member["id"])
     # okay that gets the id, now kick them.
@@ -53,38 +53,6 @@ async def mem_builder():
 
   queries.add_to_db(mem_list)
   # looking at upsert stuff, wouldn't it be easier for now to just drop the table and rebuild it completely?  it may be computationally heavy, but we can always worry about upsert stuff when we're doing polish.
-
-
-# async def scheduledEvent():
-#   threading.Timer(1, scheduledEvent).start()
-#   now = datetime.now()
-#   current_time = now.strftime("%H:%M:%S")
-#   print("Current Time =", current_time)
-#   # comment that out to not pollute the console; otherwise will fire every one second
-#   if(current_time == '09:41:00'):  # check if matches with the desired time
-#     then = datetime.now() - timedelta(days = 7)
-#     print(f"it is now {current_time}") # this code block is no longer running. may want to touch back later.
-#     mem_list = list()
-#     role = "onboarding complete" # name of the default role of all users that complete onboarding
-#     purge_list = list()
-#     for member in client.get_all_members():
-#       # mem_list.append({"id": member.id, "name": member.name, "messages_sent": 0, "roles": member.roles, "join_date": member.joined_at})
-#       # subtract any users from the db whose ids are not present in the list; they've left the server
-#     for value in mem_list:
-#       if role in str(value["roles"]):
-#         print(f'{str(value["name"])} has completed onboarding')
-#         # set onboarding_complete in db to true
-#     for value in mem_list:
-#         if role not in (str(value["roles"])) and member.joined_at.timestamp() < then.timestamp():
-#           purge_list.append(value)
-#           print(f'{str(value["id"])} {str(value["name"])} has not completed onboarding after one week')
-#           for member in purge_list:
-#             # can't get this line of code to kick a member right
-#             print(f'{member["id"]} kicked')
-#             x = client.fetch_user(member["id"])
-#             client.kick(x, reason = "never onboarded")
-
-  # await scheduledEvent()
 
 @client.event
 async def on_message(message):
@@ -131,6 +99,7 @@ async def on_message(message):
 
   # this should be in its own function; it's to check user activity levels.
 
+  # so this code block was being used to track if users are active or not.  I can repurpose this to interact with the database.
   counter = 0
   idList = []
   then = datetime.now() - timedelta(days = 7)
