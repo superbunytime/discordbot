@@ -1,1 +1,22 @@
 ---
+Admin:
+  # list of administrator ID's
+
+postgres_user:
+postgres_password:
+postgres_host:
+postgres_port:
+postgres_database:
+  # database information
+
+Token:
+  # unique API token for your bot
+
+tasks_loop:
+  # how often you want the bot to search for and kick inactive users in seconds.  Good practice is to have it run every 24 hours, so 86,400 is a sensible default value if you're not sure.
+
+tasks_inactive_timer:
+  # how long a user with no roles can stay in the server before being marked as inactive: default is 7 days or 604,800 seconds
+
+VIP_role:
+  # the id for your server's privileged role

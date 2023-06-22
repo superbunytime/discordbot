@@ -1,7 +1,7 @@
 import discord, aiohttp, asyncio, sys, time
 from discord.ext import commands, tasks
 import text_coloring as tc
-import random_fursona, tarot, d20, chat_curses, snowstamp, purge_list
+import tarot, d20, chat_curses, snowstamp
 import datetime
 from datetime import datetime, timedelta
 import threading
@@ -59,14 +59,12 @@ async def on_message(message):
 
   # if message.author == client.user:
   #   return
-    #if this is commented out, make sure nothing causes the bot to reply to itself
-    #as this would immediately cause an infinite loop and crash the program
+    # if this is commented out, make sure nothing causes the bot to reply to itself
+    # as this would immediately cause an infinite loop and crash the program
 
   msg = message.content
   msgl = message.content.lower()
 
-  if msg.startswith("/fursona"):
-    await message.channel.send(random_fursona.fursona_generator())
   if msg.startswith("/tarot"):
     await message.channel.send(tarot.tarot_generator())
   if msg.startswith("/d") and type(int(msg[2:])) == int:
