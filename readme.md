@@ -8,7 +8,7 @@ There are several critical pieces of information that will assist you in deployi
 
 After inviting the bot to your server and setting their privileges as administrator/moderator, you'll want to get some ID's; specifically the ID's of the moderation team, and the ID of the VIP role for your server if you plan on having the VIP role features of the bot enabled. If you just want to use the user-facing features, (dice rolls, tarot cards, chat curses), simply add the bot token to the config.yml file and run the bot by typing python bot.py in the terminal of your choice.
 
-To get these ID's, you will need to enable developer mode on discord.  Don't worry though, it's actually not very hard.  There's a good guide for enabling developer mode and getting user/role ID's <a href="https://www.guidingtech.com/how-to-find-a-discord-user-id/" text="here">, but if you're looking for a quick and dirty rundown...
+To get these ID's, you will need to enable developer mode on discord.  Don't worry though, it's actually not very hard.  There's a good guide for enabling developer mode and getting user/role ID's <a href="https://www.guidingtech.com/how-to-find-a-discord-user-id/">here</a>, but if you're looking for a quick and dirty rundown...
 
 Launch discord > Click gear icon on bottom left > under app settings, click advanced > first option of advanced is enable developer mode; click it to enable.
 
