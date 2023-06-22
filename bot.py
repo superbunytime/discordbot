@@ -82,9 +82,9 @@ async def on_message(message):
   
   
   member_col = message.author.color
-  #check for default uncolored users.
+  # check for default uncolored users.
   if member_col == discord.Colour.default():
-    #render them as white instead of black.
+    # render them as white instead of black.
     m_col = tc.W
   else:
     m_col = tc.new(member_col.r, member_col.g, member_col.b)
@@ -128,5 +128,3 @@ async def on_message(message):
 with open("token", "r+") as keyfile:
     key = keyfile.read()
     client.run(key)
-
-# models.connect_db(app)
