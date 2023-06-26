@@ -20,4 +20,13 @@ Your bot's token will go into the token field in the config.yml
 
 By default ENABLE_KICKING and ENABLE_VIP are set to False.  If you wish to use these features, change them to True.  You're free to change the values for TASK_LOOP, TASKS_INACTIVE_TIMER, VIP_MESSAGES, and VIP_TIMER.
 
-Some default values are provided for the database configuration. (TODO: Add information on setting up postgresql because i don't remember how to do that for this project)
+Some default values are provided for the database configuration
+
+TODO: 
+
+Add information on setting up postgresql because i don't remember how to do that for this project
+Maybe dockerize this whole thing if I'm feeling exceptionally ambitious.
+
+Here are some screencaps of what the bot will look like, on both the user-facing and moderation-facing sides.
+<img src="https://cdn.discordapp.com/attachments/1043014753875939389/1123007656085430272/export202306261419239482.png">
+<img src="https://cdn.discordapp.com/attachments/1043014753875939389/1123007656471298109/export202306261445434417.png">

@@ -89,11 +89,11 @@ async def on_message(message):
   else:
     m_col = tc.new(member_col.r, member_col.g, member_col.b)
   c_col = tc.new(255,82,197) if not message.channel.nsfw else tc.R
-  print(f'this is the channel id: {message.channel.id}')
-  print(message.author.name)
+  # print(f'this is the channel id: {message.channel.id}')
+  # print(message.author.name)
   print(f'in {c_col}{message.channel.name}, {m_col}{message.author.name}{tc.W}:')
   print(message.content)
-  print(snowstamp.createTimestamp(message.id))
+  # print(snowstamp.createTimestamp(message.id))
 
   # this should be in its own function; it's to check user activity levels.
 
