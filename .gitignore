@@ -2,4 +2,10 @@ discord/
 discord-2.0.0.dist-info/
 discord.py-2.0.1.dist-info/
 __pycache__/
+botideas.txt
+db.py
 token
+spaghetti.py
+0001-persist-records-to-db.patch
+random_fursona.py
+personalconfig.yml

@@ -1,77 +1,120 @@
-import discord, aiohttp, asyncio, sys, time
+import discord, aiohttp, asyncio, sys, time, yaml
+from discord.ext import commands, tasks
 import text_coloring as tc
-import random_fursona, tarot, d20, chat_curses, botlogic
+import tarot, d20, chat_curses, snowstamp
+import datetime
+from datetime import datetime, timedelta
+import threading
+import sqlalchemy
+from sqlalchemy import BigInteger, Column, Integer, create_engine, String, Integer, insert, select, update
+from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
+from sqlalchemy.orm import DeclarativeBase, sessionmaker, Mapped, mapped_column
+import queries, models
+
+with open('personalconfig.yml', 'r') as file:
+  config = yaml.safe_load(file)
+  # for deployment, change personalconfig.yml to config.yml
+  # I still need to run my own instances of the bot, hence the personalconfig.yml
 
 intents = discord.Intents.all()
 client = discord.Client(intents = intents)
 
+"""@client.event and @tasks.loop run the database and non-onboarded kicking features"""
 
 @client.event
 async def on_ready():
   print("we have logged in as {0.user}".format(client))
+  mem_builder.start()
 
-  counter = 0
-  mem_list = list()
-  for member in client.get_all_members():
-    mem_list.append({"id": member.id, "name": member.name, "messages_sent": 0})
-    
+@tasks.loop(seconds=config["TASKS_LOOP"])
+async def mem_builder():
+  if config["ENABLE_KICKING"]:
+    mem_list = list()
+    members = []
+    kickable = list()
+    mem_read_from_db = []
+    then = datetime.now() - timedelta(days = 7)
 
-  # print(mem_list) #that'll give you a lot of members with a lot of information
-  #since you know that works, you don't need to print it every time now.
+    for member in client.get_all_members():
+      members.append({"id": member.id,
+                      "name": member.name,
+                      "roles": len(member.roles) >= 2,
+                      "joined_at": member.joined_at})
+    for member in members:
+      new_user = models.USER(id = member['id'], name = member['name'], has_roles = member['roles'], join_date = member['joined_at'].strftime("%c"))
+      mem_list.append(new_user)
 
+    for member in queries.read_from_db(mem_read_from_db):
+      u = models.USER(id = member['id'], name = member['name'], has_roles = member['has_roles'], join_date = member['join_date'].strftime("%c"))
+      if u.has_roles == "false" and datetime.strptime(u.join_date, "%c").timestamp() > then.timestamp():
+        kickable.append(int(u.id))
+    for member in client.get_all_members():
+        if member.id in kickable:
+          await member.kick(reason="never onboarded")
 
-    # push the member id to a table using sqlalchemy
-    # the table should have member id, member name, and number of messages sent within 144 hours  
+    queries.add_to_db(mem_list)
+
 
 @client.event
 async def on_message(message):
+
   # if message.author == client.user:
   #   return
-    #if this is commented out, make sure nothing causes the bot to reply to itself
-    #as this would immediately cause an infinite loop and crash the program
+    # if this is commented out, make sure nothing causes the bot to reply to itself
+    # as this would immediately cause an infinite loop and crash the program
 
   msg = message.content
   msgl = message.content.lower()
 
-  if msg.startswith("/fursona"):
-    await message.channel.send(random_fursona.fursona_generator())
   if msg.startswith("/tarot"):
     await message.channel.send(tarot.tarot_generator())
-  if msg.startswith("/d20"):
-    await message.channel.send(d20.d20())
-  if msg.startswith("/d12"):
-    await message.channel.send(d20.d12())
-  if msg.startswith("/d10") and not msg.startswith("/d100"):
-    await message.channel.send(d20.d10())
-  if msg.startswith("/d8"):
-    await message.channel.send(d20.d8())
-  if msg.startswith("/d6"):
-    await message.channel.send(d20.d6())
-  if msg.startswith("/d4"):
-    await message.channel.send(d20.d4())
-  if msg.startswith("/d100"):
-    await message.channel.send(d20.d100())
+  if msg.startswith("/d") and type(int(msg[2:])) == int:
+    x = d20.d(int(msg[2:]))
+    await message.channel.send(x) # allows any number be passed as argument
   if msg.startswith("/curse"):
     await message.channel.send(chat_curses.curse_generator())
-  
-  #butte, puppy, bunny
-  admins = [145031705303056384, 257032548431953922, 217569769052700672]
-  
+      
+  admins = config["ADMIN"]
+
   if msgl in ["kill bot", "stop bot", "bot die", "bot stfu", "]"] and message.author.id in admins:
     await message.channel.send("OOF")
-    quit()
+    quit() # warning: this will kill the bot across all servers it's in. only use this in case of emergencies. in fact, don't actually use this at all. don't look at this method, forget it exists.
   
-  
+  """text coloring for terminal feed"""
+
   member_col = message.author.color
-  #check for default uncolored users.
+  # check for default uncolored users.
   if member_col == discord.Colour.default():
-    #render them as white instead of black.
+    # render them as white instead of black.
     m_col = tc.W
   else:
     m_col = tc.new(member_col.r, member_col.g, member_col.b)
   c_col = tc.new(255,82,197) if not message.channel.nsfw else tc.R
   print(f'in {c_col}{message.channel.name}, {m_col}{message.author.name}{tc.W}:')
   print(message.content)
+
+  """VIP role functionality:
+  Checks user activity level on a rolling x day window"""
+
+  if config["ENABLE_VIP"]:
+    counter = 0
+    idList = []
+    then = datetime.now() - timedelta(seconds = config["TASKS_INACTIVE_TIMER"])
+    for channel in message.guild.text_channels:
+      async for msg in channel.history(after = then):
+        if msg.author == message.author:
+          if len(idList) < config["VIP_MESSAGES"]:
+            idList.append(msg.id)
+          else:
+            break
+          counter += 1
+    if counter >= 10:
+      role = msg.guild.get_role(config["VIP_ROLE"])
+      await msg.author.add_roles(role, reason=None, atomic=True)
+    else:
+      role = msg.guild.get_role(config["VIP_ROLE"])
+      await msg.author.remove_roles(role, reason=None, atomic=True)
+
 
 with open("token", "r+") as keyfile:
     key = keyfile.read()

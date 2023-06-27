@@ -1,0 +1,26 @@
+---
+ADMIN:
+  # list of administrator ID's
+
+ENABLE_KICKING: False
+  # set to True or False
+  # when enabled, the bot will kick inactive users who do not complete onboarding in a timely fashion.
+
+ENABLE_VIP: False
+  # set to True or False
+  # when enabled, the bot will grant or revoke roles based on user activity level
+
+TASKS_LOOP: 86400
+  # how often you want the bot to search for and kick inactive users in seconds.  Good practice is to have it run every 24 hours, so 86,400 is a sensible default value if you're not sure.
+
+TASKS_INACTIVE_TIMER: 604800
+  # how long a user with no roles can stay in the server before being marked as inactive: default is 7 days or 604,800 seconds
+
+VIP_MESSAGES: 10
+  # the number of messages a user must send within x timeframe to gain the VIP_role
+
+VIP_TIMER: 604800
+  # the length in seconds of the time window a user must send x messages in to gain the VIP_role
+
+VIP_ROLE:
+  # the id for your server's privileged role
