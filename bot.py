@@ -34,14 +34,7 @@ async def mem_builder():
     kickable = list()
     mem_read_from_db = []
     then = datetime.now() - timedelta(days = 7)
-    for member in client.get_all_members():
-      if len(member.roles) < 2 and member.joined_at.timestamp() > then.timestamp():
-        await member.kick(reason="never onboarded")
-        kickable.append({"id": member.id,
-                      "name": member.name,
-                      "roles": len(member.roles) < 2,
-                      "joined_at": member.joined_at})
-      
+
     for member in client.get_all_members():
       members.append({"id": member.id,
                       "name": member.name,
@@ -51,9 +44,18 @@ async def mem_builder():
       new_user = models.USER(id = member['id'], name = member['name'], has_roles = member['roles'], join_date = member['joined_at'].strftime("%c"))
       mem_list.append(new_user)
 
+    for member in queries.read_from_db(mem_read_from_db):
+      u = models.USER(id = member['id'], name = member['name'], has_roles = member['has_roles'], join_date = member['join_date'].strftime("%c"))
+      if u.has_roles == "false" and datetime.strptime(u.join_date, "%c").timestamp() > then.timestamp():
+        kickable.append(int(u.id))
+    for member in client.get_all_members():
+        if member.id in kickable:
+          await member.kick(reason="never onboarded")
+          # compares the kickable list created from the users table
+          # and kicks from there. this was the last step; it works; everything works.
+
     queries.add_to_db(mem_list)
-    queries.add_to_kick_db(kickable)
-    queries.read_from_db(mem_read_from_db)
+
 
 @client.event
 async def on_message(message):

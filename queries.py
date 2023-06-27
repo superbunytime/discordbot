@@ -19,8 +19,8 @@ def read_from_db(list):
       if models.USER:
          result = session.execute(text("SELECT * FROM users"))
          for row in result.mappings():
-            list.append({"id": row.id})
-      print(list)
+            list.append({"id": row.id, "name": row.name, "has_roles": row.has_roles, "join_date": row.join_date})
+      return list
 
 def add_to_kick_db(list):
    engine = models.get_connection()
