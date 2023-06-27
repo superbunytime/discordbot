@@ -9,4 +9,3 @@ def d(n):
       return "20!  Critical!!"
     else:
       return num
-  return num
