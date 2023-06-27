@@ -11,5 +11,3 @@ def tarot_generator():
     tarot = rand(tarot_list)
     inv = rand(invert_bool)
     return (f"your card is {tarot}{inv}")
-
-#print(tarot_generator())

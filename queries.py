@@ -41,5 +41,3 @@ def read_from_kick_db(list):
          for row in result.mappings():
             list.append({"id": row.id})
       print(list)
-
-# for some reason app didn't want to let me reuse  the first two functions. oh well.

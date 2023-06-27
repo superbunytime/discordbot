@@ -51,8 +51,6 @@ async def mem_builder():
     for member in client.get_all_members():
         if member.id in kickable:
           await member.kick(reason="never onboarded")
-          # compares the kickable list created from the users table
-          # and kicks from there. this was the last step; it works; everything works.
 
     queries.add_to_db(mem_list)
 
