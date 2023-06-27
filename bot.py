@@ -23,6 +23,7 @@ async def mem_builder():
   mem_list = list()
   members = []
   kickable = []
+  mem_read_from_db = []
   then = datetime.now() - timedelta(days = 7)
   for member in client.get_all_members():
     if len(member.roles) < 2 and member.joined_at.timestamp() > then.timestamp():
@@ -31,14 +32,6 @@ async def mem_builder():
                     "name": member.name,
                     "roles": len(member.roles) < 2,
                     "joined_at": member.joined_at})
-      # for polish, add these to the has_not_onboarded table
-      # for now, just make sure they meet all the requirements to be kicked,
-      # and kick them.
-  # print(kickable)
-  for member in kickable:
-    print(member["id"])
-    # okay that gets the id, now kick them.
-    # oops none of that was working so i just kicked them up on line 29 and that worked.
     
   for member in client.get_all_members():
     # for some reason it was giving me an error until i restarted the same for loop
@@ -52,7 +45,7 @@ async def mem_builder():
     mem_list.append(new_user)
 
   queries.add_to_db(mem_list)
-  queries.read_from_db()
+  queries.read_from_db(mem_read_from_db)
   # looking at upsert stuff, wouldn't it be easier for now to just drop the table and rebuild it completely?  it may be computationally heavy, but we can always worry about upsert stuff when we're doing polish.
 
 @client.event
@@ -90,41 +83,27 @@ async def on_message(message):
   else:
     m_col = tc.new(member_col.r, member_col.g, member_col.b)
   c_col = tc.new(255,82,197) if not message.channel.nsfw else tc.R
-  # print(f'this is the channel id: {message.channel.id}')
-  # print(message.author.name)
   print(f'in {c_col}{message.channel.name}, {m_col}{message.author.name}{tc.W}:')
   print(message.content)
-  # print(snowstamp.createTimestamp(message.id))
 
-  # this should be in its own function; it's to check user activity levels.
-
-  # so this code block was being used to track if users are active or not.  I can repurpose this to interact with the database.
   counter = 0
   idList = []
   then = datetime.now() - timedelta(days = 7)
   for channel in message.guild.text_channels:
     async for msg in channel.history(after = then):
-      # put one week back from now using timedelta or snowflake in the history param
-      # you'll want to flatten that output into a list of dicts with timestamps
-      # and check the timestamp of the tenth message against the timestamp of the first message
       if msg.author == message.author:
-        # print(msg.id)
         if len(idList) < 10:
           idList.append(msg.id)
         else:
           break
-          # now compare the unix timestamps of the last message to the first message
         counter += 1
-  # print(counter)
-  # print(idList) # hiding this for now because tired of long list printing in terminal
   if counter >= 10:
-    # print("congratulations, you're granted a priveleged role!")
-    role = msg.guild.get_role(1079214033036660797) #need to get the specific role for specific server; this role is outdated
-    #okay this works, now you need to have a time function to remove the role if less than 10 messages.
+    role = msg.guild.get_role(1079214033036660797)
     await msg.author.add_roles(role, reason=None, atomic=True)
-    # after this print statement, you can append priveleged role status to sql database
-    # via sqlalchemy
-    # then, every so often, check the sql database to change roles
+  else:
+    role = msg.guild.get_role(1079214033036660797)
+    await msg.author.remove_roles(role, reason=None, atomic=True)
+
 
 with open("token", "r+") as keyfile:
     key = keyfile.read()

@@ -19,7 +19,5 @@ def read_from_db(list):
       if models.USER:
          result = session.execute(text("SELECT * FROM users"))
          for row in result.mappings():
-            print(row.id) # gets the ID. we're in business.  Now just rebuild the user from the ID.
             list.append({"id": row.id})
-# run this on bot launch, and re-run it daily to update
-# do i need to delist kicked members? probably not
+      print(list)
