@@ -52,6 +52,7 @@ async def mem_builder():
     mem_list.append(new_user)
 
   queries.add_to_db(mem_list)
+  queries.read_from_db()
   # looking at upsert stuff, wouldn't it be easier for now to just drop the table and rebuild it completely?  it may be computationally heavy, but we can always worry about upsert stuff when we're doing polish.
 
 @client.event
