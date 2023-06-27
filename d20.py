@@ -10,5 +10,3 @@ def d(n):
     else:
       return num
   return num
-
-# print(d(621))

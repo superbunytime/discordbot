@@ -21,3 +21,25 @@ def read_from_db(list):
          for row in result.mappings():
             list.append({"id": row.id})
       print(list)
+
+def add_to_kick_db(list):
+   engine = models.get_connection()
+   with Session(engine) as session:
+      if models.HAS_NOT_ONBOARDED:
+         models.HAS_NOT_ONBOARDED.__table__.drop(engine)
+      models.Base.metadata.create_all(engine)
+      session.commit()
+      for member in list:
+        session.add(member)
+        session.commit()
+
+def read_from_kick_db(list):
+   engine = models.get_connection()
+   with Session(engine) as session:
+      if models.HAS_NOT_ONBOARDED:
+         result = session.execute(text("SELECT * FROM users"))
+         for row in result.mappings():
+            list.append({"id": row.id})
+      print(list)
+
+# for some reason app didn't want to let me reuse  the first two functions. oh well.
