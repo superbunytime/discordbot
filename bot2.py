@@ -1,6 +1,10 @@
 import discord, aiohttp, asyncio, sys, time
+from discord.ext import commands, tasks
 import text_coloring as tc
 import random_fursona, tarot, d20, chat_curses
+import datetime
+from datetime import datetime, timedelta
+import threading
 
 intents = discord.Intents.all()
 client = discord.Client(intents = intents)
@@ -9,6 +13,16 @@ client = discord.Client(intents = intents)
 @client.event
 async def on_ready():
   print("we have logged in as {0.user}".format(client))
+  mem_builder.start()
+
+@tasks.loop(days=7)
+async def mem_builder:
+  then = datetime.now() - timedelta(days = 7)
+  for member in client.get_all_members:
+    if len(member.roles) < 2 and member.joined_at.timestamp() < then.timestamp():
+      print(f'{member.name} ({member.id}) should probably be kicked from the server. They joined at {member.joined_at.strftime("%c")}, and still have not completed onboarding.')
+      # await member.kick(reason="never onboarded")
+      # uncomment to kick member that hasn't onboarded.
 
 
 
