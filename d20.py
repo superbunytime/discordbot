@@ -7,5 +7,5 @@ def d(n):
       return "1... oof."
     if num == 20:
       return "20!  Critical!!"
-    else:
-      return num
+  else:
+    return num

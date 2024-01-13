@@ -1,7 +1,8 @@
 import discord, aiohttp, asyncio, sys, time, yaml
 from discord.ext import commands, tasks
 import text_coloring as tc
-import tarot, d20, chat_curses, snowstamp
+import tarot, d20, chat_curses, snowstamp, hasher
+import md_flagger
 import datetime
 from datetime import datetime, timedelta
 import threading
@@ -10,6 +11,8 @@ from sqlalchemy import BigInteger, Column, Integer, create_engine, String, Integ
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import DeclarativeBase, sessionmaker, Mapped, mapped_column
 import queries, models
+from watchdog.observers import Observer
+from watchdog.events import FileSystemEventHandler
 
 with open('personalconfig.yml', 'r') as file:
   config = yaml.safe_load(file)
@@ -21,10 +24,29 @@ client = discord.Client(intents = intents)
 
 """@client.event and @tasks.loop run the database and non-onboarded kicking features"""
 
+file_hash = hasher.sha1('testfile.txt')
+file = open('testfile.txt', 'r')
+
+
 @client.event
 async def on_ready():
   print("we have logged in as {0.user}".format(client))
   mem_builder.start()
+  toilet_cleaning.start()
+
+@tasks.loop(seconds = 10)
+async def toilet_cleaning():
+  toilet = client.get_channel(1136784026666008636)
+  messages = toilet.history(limit=5)
+  then = datetime.now() - timedelta(seconds = 10)
+  async for m in messages:
+    if m.created_at.timestamp() < then.timestamp():
+      await asyncio.sleep(1)
+      await m.delete()
+
+      # set loop timer, channel id, limit threshold, and timedelta values before deploying
+
+
 
 @tasks.loop(seconds=config["TASKS_LOOP"])
 async def mem_builder():
@@ -34,32 +56,42 @@ async def mem_builder():
     kickable = list()
     mem_read_from_db = []
     then = datetime.now() - timedelta(days = 7)
+    yesterday = datetime.now() - timedelta(minutes = 1)
 
     for member in client.get_all_members():
-      members.append({"id": member.id,
-                      "name": member.name,
-                      "roles": len(member.roles) >= 2,
-                      "joined_at": member.joined_at})
-    for member in members:
-      new_user = models.USER(id = member['id'], name = member['name'], has_roles = member['roles'], join_date = member['joined_at'].strftime("%c"))
-      mem_list.append(new_user)
+      if len(member.roles) < 2 and member.joined_at.timestamp() < then.timestamp():
+        print(f'{member.name} ({member.id}) should probably be kicked from the server. They joined at {member.joined_at.strftime("%c")}, and still have not completed onboarding.')
+        # await member.kick(reason="never onboarded")
+        # uncomment to kick member that hasn't onboarded.
 
-    for member in queries.read_from_db(mem_read_from_db):
-      u = models.USER(id = member['id'], name = member['name'], has_roles = member['has_roles'], join_date = member['join_date'].strftime("%c"))
-      if u.has_roles == "false" and datetime.strptime(u.join_date, "%c").timestamp() > then.timestamp():
-        kickable.append(int(u.id))
-    for member in client.get_all_members():
-        if member.id in kickable:
-          await member.kick(reason="never onboarded")
+    # for member in client.get_all_members():
+    #   members.append({"id": member.id,
+    #                   "name": member.name,
+    #                   "roles": len(member.roles) >= 2,
+    #                   "joined_at": member.joined_at})
+    # for member in members:
+    #   new_user = models.USER(id = member['id'], name = member['name'], has_roles = member['roles'], join_date = member['joined_at'].strftime("%c"))
+    #   mem_list.append(new_user)
 
-    queries.add_to_db(mem_list)
+    # for member in queries.read_from_db(mem_read_from_db):
+    #   u = models.USER(id = member['id'], name = member['name'], has_roles = member['has_roles'], join_date = member['join_date'].strftime("%c"))
+    #   if u.has_roles == "false" and datetime.strptime(u.join_date, "%c").timestamp() > then.timestamp():
+    #     kickable.append(int(u.id))
+    # for member in client.get_all_members():
+    #     if member.id in kickable:
+    #       await member.kick(reason="never onboarded")
 
+    # queries.add_to_db(mem_list)
+
+embeds_list = []
 
 @client.event
 async def on_message(message):
 
-  # if message.author == client.user:
-  #   return
+  if message.author == client.user:
+    print(f'in {message.channel.name}, {message.author.name}{tc.W}:')
+    print(message.content)
+    return
     # if this is commented out, make sure nothing causes the bot to reply to itself
     # as this would immediately cause an infinite loop and crash the program
 
@@ -92,6 +124,22 @@ async def on_message(message):
   c_col = tc.new(255,82,197) if not message.channel.nsfw else tc.R
   print(f'in {c_col}{message.channel.name}, {m_col}{message.author.name}{tc.W}:')
   print(message.content)
+  
+  """Malicious embed prevention"""
+
+  if 'http' in message.content and not hasattr(message.author, 'roles'): # the one line of code that got it all working. add bot not in.
+    embeds_list.append(message)
+  for m in embeds_list:
+    then_again = datetime.now() - timedelta(seconds = 10) # set the actual desired time
+    if m.created_at.timestamp() < then_again.timestamp() and hasattr(m, 'content'):
+      await m.delete()
+      embeds_list.remove(m)
+
+  """potential malicious markdown detection"""
+
+  if md_flagger.md_flagger(message.content) and not hasattr(message.author, 'roles'):
+    await message.channel.send("Warning! Potentially malicious embedded link")
+
 
   """VIP role functionality:
   Checks user activity level on a rolling x day window"""
