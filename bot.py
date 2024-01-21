@@ -1,7 +1,8 @@
 import discord, aiohttp, asyncio, sys, time, yaml
 from discord.ext import commands, tasks
 import text_coloring as tc
-import tarot, d20, chat_curses, snowstamp, hasher
+import tarot, d20, chat_curses, snowstamp, hasher, sysreadout
+
 import md_flagger
 import datetime
 from datetime import datetime, timedelta
@@ -100,6 +101,8 @@ async def on_message(message):
 
   if msg.startswith("/tarot"):
     await message.channel.send(tarot.tarot_generator())
+  if msg.startswith("/sysreadout"):
+    await message.channel.send(sysreadout.sysreadout())
   if msg.startswith("/d") and type(int(msg[2:])) == int:
     x = d20.d(int(msg[2:]))
     await message.channel.send(x) # allows any number be passed as argument
