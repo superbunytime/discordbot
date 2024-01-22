@@ -1,7 +1,7 @@
 import discord, aiohttp, asyncio, sys, time, yaml
 from discord.ext import commands, tasks
 import text_coloring as tc
-import tarot, d20, chat_curses, snowstamp, hasher, sysreadout
+import tarot, d20, chat_curses, chat_blessings, snowstamp, hasher, sysreadout
 
 import md_flagger
 import datetime
@@ -98,6 +98,7 @@ async def on_message(message):
 
   msg = message.content
   msgl = message.content.lower()
+  bless_duration_list = list()
 
   if msg.startswith("/tarot"):
     await message.channel.send(tarot.tarot_generator())
@@ -108,6 +109,8 @@ async def on_message(message):
     await message.channel.send(x) # allows any number be passed as argument
   if msg.startswith("/curse"):
     await message.channel.send(chat_curses.curse_generator())
+  if msg.startswith("/bless"):
+    await message.channel.send(chat_blessings.bless_generator(bless_duration_list))
       
   admins = config["ADMIN"]
 
