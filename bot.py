@@ -99,6 +99,8 @@ async def on_message(message):
   msg = message.content
   msgl = message.content.lower()
   bless_duration_list = list()
+  # test for value already existing in bless duration list
+  bless_duration_list.append({"name":"puppypotion", "blessing":'+20% magic find for 30 minutes',"duration":5})
 
   if msg.startswith("/tarot"):
     await message.channel.send(tarot.tarot_generator())
@@ -110,8 +112,19 @@ async def on_message(message):
   if msg.startswith("/curse"):
     await message.channel.send(chat_curses.curse_generator())
   if msg.startswith("/bless"):
-    await message.channel.send(chat_blessings.bless_generator(bless_duration_list))
-      
+    print(message.author.id)
+    for item in bless_duration_list:
+      if message.author.name in item.values():
+        # write code to calculate how long the current blessing is using timedelta
+        print(item.values())
+        await message.channel.send(f'{message.author.name}, your previous bless, *{item["blessing"]}* is still active! {item["duration"]}')
+      else:
+        bless_obj = chat_blessings.bless_generator()
+        bless_duration_list.append({"name":message.author.name, "blessing":bless_obj[0], "duration":bless_obj[1]})
+        print(f"this is the bless duration list: {bless_duration_list}")
+        # print(f"these are the items of the first index of the bless duration list:{bless_duration_list[0][0]}, {bless_duration_list[0][1]}, {bless_duration_list[0][2]}")
+        await message.channel.send(f"you have been blessed with {bless_obj[0]} for {bless_obj[1]} minutes!") 
+
   admins = config["ADMIN"]
 
   if msgl in ["kill bot", "stop bot", "bot die", "bot stfu", "]"] and message.author.id in admins:
