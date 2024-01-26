@@ -28,12 +28,22 @@ client = discord.Client(intents = intents)
 file_hash = hasher.sha1('testfile.txt')
 file = open('testfile.txt', 'r')
 
+bless_duration_list = list()
+member_set = set()
 
 @client.event
 async def on_ready():
   print("we have logged in as {0.user}".format(client))
   mem_builder.start()
   toilet_cleaning.start()
+
+# test for value already existing in bless duration list
+  for member in client.get_all_members():
+    member_set.add(member.name)
+  
+  for member in member_set:
+    bless_duration_list.append({"name":member, "blessing":'blessing refactory period',"duration":1, "timestamp":datetime.now().timestamp()})
+  print(bless_duration_list)
 
 @tasks.loop(seconds = 10)
 async def toilet_cleaning():
@@ -86,6 +96,8 @@ async def mem_builder():
 
 embeds_list = []
 
+
+
 @client.event
 async def on_message(message):
 
@@ -98,9 +110,7 @@ async def on_message(message):
 
   msg = message.content
   msgl = message.content.lower()
-  bless_duration_list = list()
-  # test for value already existing in bless duration list
-  bless_duration_list.append({"name":"puppypotion", "blessing":'+20% magic find for 30 minutes',"duration":5})
+
 
   if msg.startswith("/tarot"):
     await message.channel.send(tarot.tarot_generator())
@@ -112,18 +122,25 @@ async def on_message(message):
   if msg.startswith("/curse"):
     await message.channel.send(chat_curses.curse_generator())
   if msg.startswith("/bless"):
-    print(message.author.id)
     for item in bless_duration_list:
-      if message.author.name in item.values():
-        # write code to calculate how long the current blessing is using timedelta
-        print(item.values())
-        await message.channel.send(f'{message.author.name}, your previous bless, *{item["blessing"]}* is still active! {item["duration"]}')
-      else:
-        bless_obj = chat_blessings.bless_generator()
-        bless_duration_list.append({"name":message.author.name, "blessing":bless_obj[0], "duration":bless_obj[1]})
-        print(f"this is the bless duration list: {bless_duration_list}")
-        # print(f"these are the items of the first index of the bless duration list:{bless_duration_list[0][0]}, {bless_duration_list[0][1]}, {bless_duration_list[0][2]}")
-        await message.channel.send(f"you have been blessed with {bless_obj[0]} for {bless_obj[1]} minutes!") 
+      if message.author.name in item["name"]:
+        then_after = item["timestamp"] + (item["duration"] * 60)
+        if datetime.now().timestamp() < then_after:
+          await message.channel.send(f'{message.author.name}, your previous bless, *{item["blessing"]}* is still active! duration: {item["duration"]} minutes. Time remaining: {int(then_after) - int(datetime.now().timestamp())} seconds... hopefully.')
+          break
+        if datetime.now().timestamp() > then_after:
+          # delete item
+          bless_duration_list.remove(item)
+          # add new item
+          bless_obj = chat_blessings.bless_generator()
+          bless_duration_list.append({"name":message.author.name, "blessing":bless_obj[0], "duration":bless_obj[1], "timestamp":message.created_at.timestamp()})
+          await message.channel.send(f"you have been blessed with {bless_obj[0]} for {bless_obj[1]} minutes!")
+          break
+          # anyway this stuff gets funky if your bot is in multiple servers you're also in
+          # which was my case with the test branch stuff.
+          # which btw i've been committing to the polish branch for some reason???
+          # if this works i'm gonna git commit so hard my whole bloodline will feel it
+
 
   admins = config["ADMIN"]
 
