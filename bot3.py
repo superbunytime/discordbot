@@ -1,7 +1,7 @@
 import discord, aiohttp, asyncio, sys, time
 from discord.ext import commands, tasks
 import text_coloring as tc
-import random_fursona, tarot, d20, chat_curses, md_flagger
+import random_fursona, tarot, d20, chat_curses, chat_blessings, md_flagger
 import datetime
 from datetime import datetime, timedelta
 
@@ -9,12 +9,35 @@ from datetime import datetime, timedelta
 intents = discord.Intents.all()
 client = discord.Client(intents = intents)
 
+bless_duration_list = list()
+member_set = set()
 
 @client.event
 async def on_ready():
   print("we have logged in as {0.user}".format(client))
   mem_builder.start()
+  toilet_cleaning.start()
   
+# test for value already existing in bless duration list
+  for member in client.get_all_members():
+    member_set.add(member.name)
+  
+  for member in member_set:
+    bless_duration_list.append({"name":member, "blessing":'blessing refactory period',"duration":1, "timestamp":datetime.now().timestamp()})
+  print(bless_duration_list)
+
+
+@tasks.loop(seconds = 172800)
+async def toilet_cleaning():
+  toilet = client.get_channel(1007471133207035934)
+  messages = toilet.history(limit=99)
+  then = datetime.now() - timedelta(seconds = 172800)
+  async for m in messages:
+    if m.created_at.timestamp() < then.timestamp():
+      await asyncio.sleep(3)
+      await m.delete()
+
+      # set loop timer, channel id, limit threshold, and timedelta values before deploying
 
 @tasks.loop(seconds = 86400)
 async def mem_builder():
@@ -67,6 +90,8 @@ async def on_message(message):
   msg = message.content
   msgl = message.content.lower()
 
+  if msg.startswith("/fursona"):
+    await message.channel.send(random_fursona.fursona_generator())
   if msg.startswith("/tarot"):
     await message.channel.send(tarot.tarot_generator())
   if msg.startswith("/d") and type(int(msg[2:])) == int:
@@ -74,6 +99,27 @@ async def on_message(message):
     await message.channel.send(x) # allows any number be passed as argument
   if msg.startswith("/curse"):
     await message.channel.send(chat_curses.curse_generator())
+  if msg.startswith("/bless"):
+    for item in bless_duration_list:
+      if message.author.name in item["name"]:
+        then_after = item["timestamp"] + (item["duration"] * 60)
+        if datetime.now().timestamp() < then_after:
+          await message.channel.send(f'{message.author.name}, your previous bless, *{item["blessing"]}* is still active! duration: {item["duration"]} minutes. Time remaining: {int(then_after) - int(datetime.now().timestamp())} seconds... hopefully.')
+          break
+        if datetime.now().timestamp() > then_after:
+          # delete item
+          bless_duration_list.remove(item)
+          # add new item
+          bless_obj = chat_blessings.bless_generator()
+          bless_duration_list.append({"name":message.author.name, "blessing":bless_obj[0], "duration":bless_obj[1], "timestamp":message.created_at.timestamp()})
+          await message.channel.send(f"you have been blessed with {bless_obj[0]} for {bless_obj[1]} minutes!")
+          break
+          # anyway this stuff gets funky if your bot is in multiple servers you're also in
+          # which was my case with the test branch stuff.
+          # which btw i've been committing to the polish branch for some reason???
+          # if this works i'm gonna git commit so hard my whole bloodline will feel it
+
+
       
 #   admins = config["ADMIN"]
 
