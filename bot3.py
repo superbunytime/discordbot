@@ -103,10 +103,10 @@ async def on_message(message):
     for item in bless_duration_list:
       if message.author.name in item["name"]:
         then_after = item["timestamp"] + (item["duration"] * 60)
-        if datetime.now().timestamp() < then_after:
-          await message.channel.send(f'{message.author.name}, your previous bless, *{item["blessing"]}* is still active! duration: {item["duration"]} minutes. Time remaining: {int(then_after) - int(datetime.now().timestamp())} seconds... hopefully.')
+        if datetime.utcnow().timestamp() < then_after:
+          await message.channel.send(f'{message.author.name}, your previous bless, *{item["blessing"]}* is still active! duration: {item["duration"]} minutes. Time remaining: {int(then_after) - int(datetime.utcnow().timestamp())} seconds... hopefully.')
           break
-        if datetime.now().timestamp() > then_after:
+        if datetime.utcnow().timestamp() > then_after:
           # delete item
           bless_duration_list.remove(item)
           # add new item
