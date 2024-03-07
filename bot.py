@@ -121,6 +121,12 @@ async def on_message(message):
     await message.channel.send(x) # allows any number be passed as argument
   if msg.startswith("/curse"):
     await message.channel.send(chat_curses.curse_generator())
+  if msg.startswith("/pet"):
+    if message.author.nick:
+      petter = message.author.nick
+    else:
+      petter = message.author.name
+    await message.channel.send(f'{petter} pets {msg[5:len(msg)]}! positive petting message!! Now check this shit out... {client.get_user(int(msg[7:len(msg)-1])).display_avatar}')
   if msg.startswith("/bless"):
     for item in bless_duration_list:
       if message.author.name in item["name"]:
