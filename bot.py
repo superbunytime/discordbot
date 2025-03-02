@@ -34,7 +34,8 @@ async def bless_refresher():
     bless_duration_list.append({"name":member, "blessing":'blessing refactory period',"duration":1, "timestamp":datetime.now().timestamp()})
   print(bless_duration_list)
 
-
+async def on_member_join(member):
+  await bless_refresher()
 
       # set loop timer, channel id, limit threshold, and timedelta values before deploying
 
